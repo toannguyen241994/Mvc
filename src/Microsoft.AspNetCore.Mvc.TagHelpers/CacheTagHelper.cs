@@ -144,7 +144,7 @@ namespace Microsoft.AspNetCore.Mvc.TagHelpers
                 tokenSource.Cancel();
 
                 // Fail the TCS so other awaiters see the exception.
-                tcs.SetException(ex);
+                tcs.TrySetException(ex);
                 throw;
             }
             finally
