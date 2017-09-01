@@ -304,10 +304,11 @@ namespace Microsoft.AspNetCore.Mvc.Internal
         private async Task InvokeActionMethodAsync()
         {
             var controllerContext = _controllerContext;
-            var executor = _cacheEntry.ActionMethodExecutor;
+            var objectMethodExecutor = _cacheEntry.ObjectMethodExecutor;
             var controller = _instance;
             var arguments = _arguments;
-            var orderedArguments = PrepareArguments(arguments, executor);
+            var actionMethodExecutor = _cacheEntry.ActionMethodExecutor;
+            var orderedArguments = PrepareArguments(arguments, objectMethodExecutor);
 
             var diagnosticSource = _diagnosticSource;
             var logger = _logger;
@@ -321,74 +322,14 @@ namespace Microsoft.AspNetCore.Mvc.Internal
                     controller);
                 logger.ActionMethodExecuting(controllerContext, orderedArguments);
 
-                var returnType = executor.MethodReturnType;
-                if (returnType == typeof(void))
+                var converterResult = actionMethodExecutor.Execute(objectMethodExecutor, controller, orderedArguments);
+                if (converterResult.IsCompletedSuccessfully)
                 {
-                    // Sync method returning void
-                    executor.Execute(controller, orderedArguments);
-                    result = new EmptyResult();
-                }
-                else if (returnType == typeof(Task))
-                {
-                    // Async method returning Task
-                    // Avoid extra allocations by calling Execute rather than ExecuteAsync and casting to Task.
-                    await (Task)executor.Execute(controller, orderedArguments);
-                    result = new EmptyResult();
-                }
-                else if (returnType == typeof(Task<IActionResult>))
-                {
-                    // Async method returning Task<IActionResult>
-                    // Avoid extra allocations by calling Execute rather than ExecuteAsync and casting to Task<IActionResult>.
-                    result = await (Task<IActionResult>)executor.Execute(controller, orderedArguments);
-                    if (result == null)
-                    {
-                        throw new InvalidOperationException(
-                            Resources.FormatActionResult_ActionReturnValueCannotBeNull(typeof(IActionResult)));
-                    }
-                }
-                else if (IsResultIActionResult(executor))
-                {
-                    if (executor.IsMethodAsync)
-                    {
-                        // Async method returning awaitable-of-IActionResult (e.g., Task<ViewResult>)
-                        // We have to use ExecuteAsync because we don't know the awaitable's type at compile time.
-                        result = (IActionResult)await executor.ExecuteAsync(controller, orderedArguments);
-                    }
-                    else
-                    {
-                        // Sync method returning IActionResult (e.g., ViewResult)
-                        result = (IActionResult)executor.Execute(controller, orderedArguments);
-                    }
-
-                    if (result == null)
-                    {
-                        throw new InvalidOperationException(
-                            Resources.FormatActionResult_ActionReturnValueCannotBeNull(executor.AsyncResultType ?? returnType));
-                    }
-                }
-                else if (!executor.IsMethodAsync)
-                {
-                    // Sync method returning arbitrary object
-                    var resultAsObject = executor.Execute(controller, orderedArguments);
-                    result = resultAsObject as IActionResult ?? new ObjectResult(resultAsObject)
-                    {
-                        DeclaredType = returnType,
-                    };
-                }
-                else if (executor.AsyncResultType == typeof(void))
-                {
-                    // Async method returning awaitable-of-void
-                    await executor.ExecuteAsync(controller, orderedArguments);
-                    result = new EmptyResult();
+                    result = converterResult.Result;
                 }
                 else
                 {
-                    // Async method returning awaitable-of-nonvoid
-                    var resultAsObject = await executor.ExecuteAsync(controller, orderedArguments);
-                    result = resultAsObject as IActionResult ?? new ObjectResult(resultAsObject)
-                    {
-                        DeclaredType = executor.AsyncResultType,
-                    };
+                    result = await converterResult;
                 }
 
                 _result = result;
