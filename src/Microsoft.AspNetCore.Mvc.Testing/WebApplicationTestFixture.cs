@@ -85,11 +85,11 @@ namespace Microsoft.AspNetCore.Mvc.Testing
         /// found traversing up the folder hierarchy from the test execution folder is considered as the base path.</param>
         protected WebApplicationTestFixture(string solutionSearchPattern, string solutionRelativePath)
         {
-            var builder = WebHostBuilderTestingExtensions.FromStartup<TStartup>(GetArguments()) ?? new WebHostBuilder();
+            EnsureDepsFile();
 
+            var builder = WebHostBuilderTestingExtensions.FromStartup<TStartup>(GetArguments()) ?? new WebHostBuilder();
             builder
                 .UseStartup<TStartup>()
-                .UseApplicationAssemblies<TStartup>()
                 .UseSolutionRelativeContentRoot(solutionRelativePath);
 
             ConfigureApplication(builder);
@@ -97,6 +97,23 @@ namespace Microsoft.AspNetCore.Mvc.Testing
 
             Client = _server.CreateClient();
             Client.BaseAddress = new Uri("http://localhost");
+        }
+
+        private void EnsureDepsFile()
+        {
+            var depsFileName = $"{typeof(TStartup).Assembly.GetName().Name}.deps.json";
+            var depsFile = new FileInfo(Path.Combine(AppContext.BaseDirectory, depsFileName));
+            if (!depsFile.Exists)
+            {
+                throw new InvalidOperationException($"Can't find'{depsFile.FullName}'. This file is required for functional tests " +
+                    "to run properly. There should be a copy of the file on your source project bin folder. If thats not the " +
+                    "case, make sure that the property PreserveCompilationContext is set to true on your project file. E.g" +
+                    "'<PreserveCompilationContext>true</PreserveCompilationContext>'." +
+                    $"For functional tests to work they need to either run from the build output folder or the {Path.GetFileName(depsFile.FullName)} " +
+                    $"file from your application's output directory must be copied" +
+                    "to the folder where the tests are running on. A common cause for this error is having shadow copying enabled when the " +
+                    "tests run.");
+            }
         }
 
         /// <summary>
