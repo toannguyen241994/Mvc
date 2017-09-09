@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Localization.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Localization;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.Localization;
 namespace Microsoft.Extensions.DependencyInjection
 {
     /// <summary>
-    /// Extension methods for configuring MVC view localization.
+    /// Extension methods for configuring MVC localization.
     /// </summary>
     public static class MvcLocalizationMvcBuilderExtensions
     {
@@ -85,6 +86,67 @@ namespace Microsoft.Extensions.DependencyInjection
 
             MvcLocalizationServices.AddLocalizationServices(builder.Services, format, setupAction);
             return builder;
+        }
+
+        /// <summary>
+        /// Adds MVC view and data annotations localization services to the application.
+        /// </summary>
+        /// <param name="builder">The <see cref="IMvcBuilder"/>.</param>
+        /// <returns>The <see cref="IMvcBuilder"/>.</returns>
+        public static IMvcBuilder AddMvcLocalization(this IMvcBuilder builder)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return AddMvcLocalization(builder, localizationOptionsSetupAction: null);
+        }
+
+        /// <summary>
+        /// Adds MVC view and data annotations localization services to the application.
+        /// </summary>
+        /// <param name="builder">The <see cref="IMvcBuilder"/>.</param>
+        /// <param name="localizationOptionsSetupAction">An action to configure the <see cref="LocalizationOptions"/>.</param>
+        /// <returns>The <see cref="IMvcBuilder"/>.</returns>
+        public static IMvcBuilder AddMvcLocalization(
+            this IMvcBuilder builder,
+            Action<LocalizationOptions> localizationOptionsSetupAction)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return AddMvcLocalization(
+                builder,
+                localizationOptionsSetupAction,
+                LanguageViewLocationExpanderFormat.Suffix,
+                dataAnnotationsLocalizationOptionsSetupAction: null);
+        }
+
+        /// <summary>
+        /// Adds MVC view and data annotations localization services to the application.
+        /// </summary>
+        /// <param name="builder">The <see cref="IMvcBuilder"/>.</param>
+        /// <param name="format">The view format for localized views.</param>
+        /// <param name="localizationOptionsSetupAction">An action to configure the <see cref="LocalizationOptions"/>.</param>
+        /// <param name="dataAnnotationsLocalizationOptionsSetupAction">An action to configure the <see cref="MvcDataAnnotationsLocalizationOptions"/>.</param>
+        /// <returns>The <see cref="IMvcBuilder"/>.</returns>
+        public static IMvcBuilder AddMvcLocalization(
+            this IMvcBuilder builder,
+            Action<LocalizationOptions> localizationOptionsSetupAction,
+            LanguageViewLocationExpanderFormat format,
+            Action<MvcDataAnnotationsLocalizationOptions> dataAnnotationsLocalizationOptionsSetupAction)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder
+                .AddViewLocalization(format, localizationOptionsSetupAction)
+                .AddDataAnnotationsLocalization(dataAnnotationsLocalizationOptionsSetupAction);
         }
     }
 }
