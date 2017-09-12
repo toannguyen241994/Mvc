@@ -195,6 +195,31 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Adds MVC view and data annotations localization services to the application.
         /// </summary>
         /// <param name="builder">The <see cref="IMvcCoreBuilder"/>.</param>
+        /// <param name="localizationOptionsSetupAction">An action to configure the
+        /// <see cref="LocalizationOptions"/>.</param>
+        /// <param name="format">The view format for localized views.</param>
+        /// <returns>The <see cref="IMvcCoreBuilder"/>.</returns>
+        public static IMvcCoreBuilder AddMvcLocalization(
+            this IMvcCoreBuilder builder,
+            Action<LocalizationOptions> localizationOptionsSetupAction,
+            LanguageViewLocationExpanderFormat format)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return AddMvcLocalization(
+                builder,
+                localizationOptionsSetupAction: localizationOptionsSetupAction,
+                format: format,
+                dataAnnotationsLocalizationOptionsSetupAction: null);
+        }
+
+        /// <summary>
+        /// Adds MVC view and data annotations localization services to the application.
+        /// </summary>
+        /// <param name="builder">The <see cref="IMvcCoreBuilder"/>.</param>
         /// <param name="dataAnnotationsLocalizationOptionsSetupAction">An action to configure
         /// the <see cref="MvcDataAnnotationsLocalizationOptions"/>.</param>
         /// <returns>The <see cref="IMvcCoreBuilder"/>.</returns>
@@ -216,6 +241,57 @@ namespace Microsoft.Extensions.DependencyInjection
                 builder,
                 localizationOptionsSetupAction: null,
                 format: LanguageViewLocationExpanderFormat.Suffix,
+                dataAnnotationsLocalizationOptionsSetupAction: dataAnnotationsLocalizationOptionsSetupAction);
+        }
+
+        /// <summary>
+        /// Adds MVC view and data annotations localization services to the application.
+        /// </summary>
+        /// <param name="builder">The <see cref="IMvcCoreBuilder"/>.</param>
+        /// <param name="localizationOptionsSetupAction">An action to configure the
+        /// <see cref="LocalizationOptions"/>.</param>
+        /// <param name="dataAnnotationsLocalizationOptionsSetupAction">An action to configure the
+        /// <see cref="MvcDataAnnotationsLocalizationOptions"/>.</param>
+        /// <returns>The <see cref="IMvcCoreBuilder"/>.</returns>
+        public static IMvcCoreBuilder AddMvcLocalization(
+            this IMvcCoreBuilder builder,
+            Action<LocalizationOptions> localizationOptionsSetupAction,
+            Action<MvcDataAnnotationsLocalizationOptions> dataAnnotationsLocalizationOptionsSetupAction)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return AddMvcLocalization(
+                builder,
+                localizationOptionsSetupAction: localizationOptionsSetupAction,
+                format: LanguageViewLocationExpanderFormat.Suffix,
+                dataAnnotationsLocalizationOptionsSetupAction: dataAnnotationsLocalizationOptionsSetupAction);
+        }
+
+        /// <summary>
+        /// Adds MVC view and data annotations localization services to the application.
+        /// </summary>
+        /// <param name="builder">The <see cref="IMvcCoreBuilder"/>.</param>
+        /// <param name="format">The view format for localized views.</param>
+        /// <param name="dataAnnotationsLocalizationOptionsSetupAction">An action to configure the
+        /// <see cref="MvcDataAnnotationsLocalizationOptions"/>.</param>
+        /// <returns>The <see cref="IMvcCoreBuilder"/>.</returns>
+        public static IMvcCoreBuilder AddMvcLocalization(
+            this IMvcCoreBuilder builder,
+            LanguageViewLocationExpanderFormat format,
+            Action<MvcDataAnnotationsLocalizationOptions> dataAnnotationsLocalizationOptionsSetupAction)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return AddMvcLocalization(
+                builder,
+                localizationOptionsSetupAction: null,
+                format: format,
                 dataAnnotationsLocalizationOptionsSetupAction: dataAnnotationsLocalizationOptionsSetupAction);
         }
 
