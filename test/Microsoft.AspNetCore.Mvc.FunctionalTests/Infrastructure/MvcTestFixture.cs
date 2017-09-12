@@ -22,10 +22,8 @@ namespace Microsoft.AspNetCore.Mvc.FunctionalTests
         {
         }
 
-        protected override void ConfigureApplication(IWebHostBuilder builder)
-        {
+        protected override void ConfigureWebHost(IWebHostBuilder builder) => 
             builder.UseRequestCulture<TStartup>("en-GB", "en-US");
-        }
 
         protected override TestServer CreateServer(IWebHostBuilder builder)
         {

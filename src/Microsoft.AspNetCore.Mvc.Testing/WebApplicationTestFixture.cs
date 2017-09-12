@@ -24,7 +24,7 @@ namespace Microsoft.AspNetCore.Mvc.Testing
         /// </para>
         /// <para>
         /// This constructor will infer the application root directive by searching for a solution file (*.sln) and then
-        /// appending the path<c> src/{AssemblyName}</c> to the solution directory.The application root directory will be
+        /// appending the path<c>{AssemblyName}</c> to the solution directory.The application root directory will be
         /// used to discover views and content files.
         /// </para>
         /// <para>
@@ -34,7 +34,7 @@ namespace Microsoft.AspNetCore.Mvc.Testing
         /// </para>
         /// </summary>
         public WebApplicationTestFixture()
-            : this(Path.Combine("src", typeof(TStartup).Assembly.GetName().Name))
+            : this(typeof(TStartup).Assembly.GetName().Name)
         {
         }
 
@@ -57,7 +57,7 @@ namespace Microsoft.AspNetCore.Mvc.Testing
         /// <param name="solutionRelativePath">The path to the project folder relative to the solution file of your
         /// application. The folder of the first .sln file found traversing up the folder hierarchy from the test execution
         /// folder is considered as the base path.</param>
-        protected WebApplicationTestFixture(string solutionRelativePath)
+        public WebApplicationTestFixture(string solutionRelativePath)
             : this("*.sln", solutionRelativePath)
         {
         }
@@ -83,16 +83,16 @@ namespace Microsoft.AspNetCore.Mvc.Testing
         /// <param name="solutionRelativePath">The path to the project folder relative to the solution file of your
         /// application. The folder of the first sln file that matches the <paramref name="solutionSearchPattern"/>
         /// found traversing up the folder hierarchy from the test execution folder is considered as the base path.</param>
-        protected WebApplicationTestFixture(string solutionSearchPattern, string solutionRelativePath)
+        public WebApplicationTestFixture(string solutionSearchPattern, string solutionRelativePath)
         {
             EnsureDepsFile();
 
-            var builder = WebHostBuilderTestingExtensions.FromStartup<TStartup>(GetArguments()) ?? new WebHostBuilder();
+            var builder = CreateWebHostBuilder();
             builder
                 .UseStartup<TStartup>()
                 .UseSolutionRelativeContentRoot(solutionRelativePath);
 
-            ConfigureApplication(builder);
+            ConfigureWebHost(builder);
             _server = CreateServer(builder);
 
             Client = _server.CreateClient();
@@ -117,10 +117,16 @@ namespace Microsoft.AspNetCore.Mvc.Testing
         }
 
         /// <summary>
-        /// Creates the arguments passed to <c>CreateDefaultBuilder(string[] args) when initializing the host.</c>
+        /// Creates a <see cref="IWebHostBuilder"/> used to setup <see cref="TestServer"/>.
+        /// <remarks>
+        /// The default implementation of this method looks for a <c>public static IWebHostBuilder CreateDefaultBuilder(string[] args)</c>
+        /// method defined on the entry point of the assembly of <typeparamref name="TStartup" /> and invokes it passing an empty string
+        /// array as arguments. In case this method can't be found,
+        /// </remarks>
         /// </summary>
-        /// <returns>The arguments to passed to <c>CreateDefaultbuilder(string[] args)</c>.</returns>
-        protected virtual string[] GetArguments() => new string[0];
+        /// <returns>A <see cref="IWebHostBuilder"/> instance.</returns>
+        protected virtual IWebHostBuilder CreateWebHostBuilder() =>
+            WebHostBuilderTestingExtensions.FromStartup<TStartup>(Array.Empty<string>()) ?? new WebHostBuilder();
 
         /// <summary>
         /// Creates the <see cref="TestServer"/> with the bootstrapped application in <paramref name="builder"/>.
@@ -134,7 +140,7 @@ namespace Microsoft.AspNetCore.Mvc.Testing
         /// Gives a fixture an opportunity to configure the application before it gets built.
         /// </summary>
         /// <param name="builder">The <see cref="IWebHostBuilder"/> for the application.</param>
-        protected virtual void ConfigureApplication(IWebHostBuilder builder)
+        protected virtual void ConfigureWebHost(IWebHostBuilder builder)
         {
         }
 

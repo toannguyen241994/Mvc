@@ -11,9 +11,9 @@ namespace Microsoft.AspNetCore.Mvc.FunctionalTests
     public class MvcEncodedTestFixture<TStartup> : MvcTestFixture<TStartup>
         where TStartup : class
     {
-        protected override void ConfigureApplication(IWebHostBuilder builder)
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            base.ConfigureApplication(builder);
+            base.ConfigureWebHost(builder);
             builder.ConfigureServices(services =>
             {
                 services.TryAddTransient<HtmlEncoder, HtmlTestEncoder>();
