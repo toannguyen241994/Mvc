@@ -23,7 +23,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
     /// This class handles deserialization of input XML data
     /// to strongly-typed objects using <see cref="XmlSerializer"/>
     /// </summary>
-    public class XmlSerializerInputFormatter : TextInputFormatter
+    public class XmlSerializerInputFormatter : TextInputFormatter, IInbuiltInputFormatter
     {
         private readonly ConcurrentDictionary<Type, object> _serializerCache = new ConcurrentDictionary<Type, object>();
         private readonly XmlDictionaryReaderQuotas _readerQuotas = FormattingUtilities.GetDefaultXmlReaderQuotas();
@@ -77,6 +77,8 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
         /// </summary>
         public XmlDictionaryReaderQuotas XmlDictionaryReaderQuotas => _readerQuotas;
 
+        public virtual bool SendBadRequestForExceptionsDuringDeserialization => false;
+
         /// <inheritdoc />
         public override async Task<InputFormatterResult> ReadRequestBodyAsync(
             InputFormatterContext context,
@@ -105,24 +107,42 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
                 request.Body.Seek(0L, SeekOrigin.Begin);
             }
 
-            using (var xmlReader = CreateXmlReader(new NonDisposableStream(request.Body), encoding))
+            try
             {
-                var type = GetSerializableType(context.ModelType);
-
-                var serializer = GetCachedSerializer(type);
-
-                var deserializedObject = serializer.Deserialize(xmlReader);
-
-                // Unwrap only if the original type was wrapped.
-                if (type != context.ModelType)
+                using (var xmlReader = CreateXmlReader(new NonDisposableStream(request.Body), encoding))
                 {
-                    if (deserializedObject is IUnwrappable unwrappable)
+                    var type = GetSerializableType(context.ModelType);
+
+                    var serializer = GetCachedSerializer(type);
+
+                    var deserializedObject = serializer.Deserialize(xmlReader);
+
+                    // Unwrap only if the original type was wrapped.
+                    if (type != context.ModelType)
                     {
-                        deserializedObject = unwrappable.Unwrap(declaredType: context.ModelType);
+                        if (deserializedObject is IUnwrappable unwrappable)
+                        {
+                            deserializedObject = unwrappable.Unwrap(declaredType: context.ModelType);
+                        }
+                    }
+
+                    return InputFormatterResult.Success(deserializedObject);
+                }
+            }
+            catch (Exception exception)
+            {
+                if (SendBadRequestForExceptionsDuringDeserialization && exception is InvalidOperationException)
+                {
+                    // XmlSerializer wraps actual exceptions (like FormatException or XmlException) into an InvalidOperationException
+                    // https://github.com/dotnet/corefx/blob/master/src/System.Private.Xml/src/System/Xml/Serialization/XmlSerializer.cs#L652
+                    var innerException = exception.InnerException;
+                    if (innerException is FormatException || innerException is XmlException)
+                    {
+                        throw new InputFormatException("Error deserializing input", exception);
                     }
                 }
 
-                return InputFormatterResult.Success(deserializedObject);
+                throw;
             }
         }
 

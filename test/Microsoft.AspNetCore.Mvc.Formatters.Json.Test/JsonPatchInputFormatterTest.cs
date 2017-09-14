@@ -267,10 +267,11 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
                 readerFactory: new TestHttpRequestStreamReaderFactory().CreateReader);
 
             // Act
-            var result = await formatter.ReadAsync(context);
+            var exception = await Assert.ThrowsAsync<InputFormatException>(() => formatter.ReadAsync(context));
 
             // Assert
-            Assert.True(result.HasError);
+            Assert.NotNull(exception);
+            Assert.Contains(exceptionMessage, exception.InnerException?.Message);
             Assert.Contains(exceptionMessage, modelState[""].Errors[0].Exception.Message);
         }
 

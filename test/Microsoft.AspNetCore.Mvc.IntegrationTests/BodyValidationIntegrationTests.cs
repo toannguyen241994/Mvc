@@ -484,7 +484,7 @@ namespace Microsoft.AspNetCore.Mvc.IntegrationTests
             Assert.Equal("CustomParameter.Address", entry.Key);
             Assert.Null(entry.Value.AttemptedValue);
             Assert.Null(entry.Value.RawValue);
-            var error = Assert.Single(entry.Value.Errors);
+            var error = entry.Value.Errors[0];
             Assert.NotNull(error.Exception);
 
             // Json.NET currently throws an exception starting with "No JSON content found and type 'System.Int32' is
@@ -578,14 +578,14 @@ namespace Microsoft.AspNetCore.Mvc.IntegrationTests
             Assert.Null(boundPerson.Address);
 
             Assert.False(modelState.IsValid);
-            Assert.Equal(1, modelState.Count);
-            Assert.Equal(1, modelState.ErrorCount);
+            Assert.Equal(2, modelState.Count);
+            Assert.Equal(2, modelState.ErrorCount);
 
             var state = modelState["CustomParameter.Address.Number"];
             Assert.NotNull(state);
             Assert.Null(state.AttemptedValue);
             Assert.Null(state.RawValue);
-            var error = Assert.Single(state.Errors);
+            var error = state.Errors[0];
             Assert.NotNull(error.Exception);
 
             // Json.NET currently throws an Exception with a Message starting with "Could not convert string to

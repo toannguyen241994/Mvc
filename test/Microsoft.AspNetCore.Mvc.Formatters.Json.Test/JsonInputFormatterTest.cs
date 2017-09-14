@@ -325,10 +325,10 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
                 readerFactory: new TestHttpRequestStreamReaderFactory().CreateReader);
 
             // Act
-            var result = await formatter.ReadAsync(context);
+            var exception = await Assert.ThrowsAsync<InputFormatException>(() => formatter.ReadAsync(context));
 
             // Assert
-            Assert.True(result.HasError);
+            Assert.NotNull(exception);
             Assert.Equal(
                 "Could not convert string to decimal: not-an-age. Path 'Age', line 1, position 39.",
                 modelState["Age"].Errors[0].Exception.Message);
@@ -356,10 +356,10 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
                 readerFactory: new TestHttpRequestStreamReaderFactory().CreateReader);
 
             // Act
-            var result = await formatter.ReadAsync(context);
+            var exception = await Assert.ThrowsAsync<InputFormatException>(() => formatter.ReadAsync(context));
 
             // Assert
-            Assert.True(result.HasError);
+            Assert.NotNull(exception);
             Assert.Equal("The supplied value is invalid.", modelState["[2]"].Errors[0].ErrorMessage);
             Assert.Null(modelState["[2]"].Errors[0].Exception);
         }
@@ -386,10 +386,10 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
                 readerFactory: new TestHttpRequestStreamReaderFactory().CreateReader);
 
             // Act
-            var result = await formatter.ReadAsync(context);
+            var exception = await Assert.ThrowsAsync<InputFormatException>(() => formatter.ReadAsync(context));
 
             // Assert
-            Assert.True(result.HasError);
+            Assert.NotNull(exception);
             Assert.Equal(
                 "Error converting value 300 to type 'System.Byte'. Path '[1].Small', line 1, position 59.",
                 modelState["names[1].Small"].Errors[0].Exception.Message);
@@ -421,10 +421,10 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             modelState.AddModelError("key2", "error2");
 
             // Act
-            var result = await formatter.ReadAsync(context);
+            var exception = await Assert.ThrowsAsync<InputFormatException>(() => formatter.ReadAsync(context));
 
             // Assert
-            Assert.True(result.HasError);
+            Assert.NotNull(exception);
             Assert.False(modelState.ContainsKey("age"));
             var error = Assert.Single(modelState[""].Errors);
             Assert.IsType<TooManyModelErrorsException>(error.Exception);
@@ -502,10 +502,10 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
                 readerFactory: new TestHttpRequestStreamReaderFactory().CreateReader);
 
             // Act
-            var result = await jsonFormatter.ReadAsync(inputFormatterContext);
+            var exception = await Assert.ThrowsAsync<InputFormatException>(() => jsonFormatter.ReadAsync(inputFormatterContext));
 
             // Assert
-            Assert.True(result.HasError);
+            Assert.NotNull(exception);
             Assert.False(modelState.IsValid);
 
             var modelErrorMessage = modelState.Values.First().Errors[0].Exception.Message;

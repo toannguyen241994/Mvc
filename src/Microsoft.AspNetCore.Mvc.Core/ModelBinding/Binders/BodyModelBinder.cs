@@ -177,9 +177,27 @@ namespace Microsoft.AspNetCore.Mvc.ModelBinding.Binders
                     bindingContext.ModelState.AddModelError(modelBindingKey, message);
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                bindingContext.ModelState.AddModelError(modelBindingKey, ex, bindingContext.ModelMetadata);
+                bool sendBadRequestForAllExceptions;
+                if (formatter is IInbuiltInputFormatter inbuiltInputFormatter)
+                {
+                    sendBadRequestForAllExceptions = inbuiltInputFormatter.SendBadRequestForExceptionsDuringDeserialization
+                        &&_options.SendBadRequestForAllExceptionsDuringDeserializationInInbuiltFormatters;
+                }
+                else
+                {
+                    sendBadRequestForAllExceptions = _options.SendBadRequestForAllExceptionsDuringInputFormatterDeserialization;
+                }
+
+                if (sendBadRequestForAllExceptions || exception is InputFormatException)
+                {
+                    bindingContext.ModelState.AddModelError(modelBindingKey, exception, bindingContext.ModelMetadata);
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
     }
