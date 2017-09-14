@@ -4,11 +4,12 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.Extensions.Logging;
 
-namespace Microsoft.AspNetCore.Mvc.Internal
+namespace Microsoft.AspNetCore.Mvc.Infrastructure
 {
-    public class ContentResultExecutor
+    public class ContentResultExecutor : IActionResultExecutor<ContentResult>
     {
         private const string DefaultContentType = "text/plain; charset=utf-8";
         private readonly ILogger<ContentResultExecutor> _logger;
