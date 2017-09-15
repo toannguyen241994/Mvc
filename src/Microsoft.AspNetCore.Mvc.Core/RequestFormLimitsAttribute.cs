@@ -18,14 +18,6 @@ namespace Microsoft.AspNetCore.Mvc
     public class RequestFormLimitsAttribute : Attribute, IFilterFactory, IOrderedFilter
     {
         /// <summary>
-        /// Creates an instance of <see cref="RequestFormLimitsAttribute"/>.
-        /// </summary>
-        public RequestFormLimitsAttribute()
-        {
-            FormOptions = new FormOptions();
-        }
-
-        /// <summary>
         /// Gets the order value for determining the order of execution of filters. Filters execute in
         /// ascending numeric value of the <see cref="Order"/> property.
         /// </summary>
@@ -47,7 +39,7 @@ namespace Microsoft.AspNetCore.Mvc
         public bool IsReusable => true;
 
         // Internal for unit testing
-        internal FormOptions FormOptions { get; }
+        internal FormOptions FormOptions { get; } = new FormOptions();
 
         /// <summary>
         /// Enables full request body buffering. Use this if multiple components need to read the raw stream.
@@ -55,14 +47,8 @@ namespace Microsoft.AspNetCore.Mvc
         /// </summary>
         public bool BufferBody
         {
-            get
-            {
-                return FormOptions.BufferBody;
-            }
-            set
-            {
-                FormOptions.BufferBody = value;
-            }
+            get => FormOptions.BufferBody;
+            set => FormOptions.BufferBody = value;
         }
 
         /// <summary>
@@ -72,14 +58,8 @@ namespace Microsoft.AspNetCore.Mvc
         /// </summary>
         public int MemoryBufferThreshold
         {
-            get
-            {
-                return FormOptions.MemoryBufferThreshold;
-            }
-            set
-            {
-                FormOptions.MemoryBufferThreshold = value;
-            }
+            get => FormOptions.MemoryBufferThreshold;
+            set => FormOptions.MemoryBufferThreshold = value;
         }
 
         /// <summary>
@@ -88,14 +68,8 @@ namespace Microsoft.AspNetCore.Mvc
         /// </summary>
         public long BufferBodyLengthLimit
         {
-            get
-            {
-                return FormOptions.BufferBodyLengthLimit;
-            }
-            set
-            {
-                FormOptions.BufferBodyLengthLimit = value;
-            }
+            get => FormOptions.BufferBodyLengthLimit;
+            set => FormOptions.BufferBodyLengthLimit = value;
         }
 
         /// <summary>
@@ -104,14 +78,8 @@ namespace Microsoft.AspNetCore.Mvc
         /// </summary>
         public int ValueCountLimit
         {
-            get
-            {
-                return FormOptions.ValueCountLimit;
-            }
-            set
-            {
-                FormOptions.ValueCountLimit = value;
-            }
+            get => FormOptions.ValueCountLimit;
+            set => FormOptions.ValueCountLimit = value;
         }
 
         /// <summary>
@@ -120,14 +88,8 @@ namespace Microsoft.AspNetCore.Mvc
         /// </summary>
         public int KeyLengthLimit
         {
-            get
-            {
-                return FormOptions.KeyLengthLimit;
-            }
-            set
-            {
-                FormOptions.KeyLengthLimit = value;
-            }
+            get => FormOptions.KeyLengthLimit;
+            set => FormOptions.KeyLengthLimit = value;
         }
 
         /// <summary>
@@ -136,14 +98,8 @@ namespace Microsoft.AspNetCore.Mvc
         /// </summary>
         public int ValueLengthLimit
         {
-            get
-            {
-                return FormOptions.ValueLengthLimit;
-            }
-            set
-            {
-                FormOptions.ValueLengthLimit = value;
-            }
+            get => FormOptions.ValueLengthLimit;
+            set => FormOptions.ValueLengthLimit = value;
         }
 
         /// <summary>
@@ -152,14 +108,8 @@ namespace Microsoft.AspNetCore.Mvc
         /// </summary>
         public int MultipartBoundaryLengthLimit
         {
-            get
-            {
-                return FormOptions.MultipartBoundaryLengthLimit;
-            }
-            set
-            {
-                FormOptions.MultipartBoundaryLengthLimit = value;
-            }
+            get => FormOptions.MultipartBoundaryLengthLimit;
+            set => FormOptions.MultipartBoundaryLengthLimit = value;
         }
 
         /// <summary>
@@ -169,14 +119,8 @@ namespace Microsoft.AspNetCore.Mvc
         /// </summary>
         public int MultipartHeadersCountLimit
         {
-            get
-            {
-                return FormOptions.MultipartHeadersCountLimit;
-            }
-            set
-            {
-                FormOptions.MultipartHeadersCountLimit = value;
-            }
+            get => FormOptions.MultipartHeadersCountLimit;
+            set => FormOptions.MultipartHeadersCountLimit = value;
         }
 
         /// <summary>
@@ -185,14 +129,8 @@ namespace Microsoft.AspNetCore.Mvc
         /// </summary>
         public int MultipartHeadersLengthLimit
         {
-            get
-            {
-                return FormOptions.MultipartHeadersLengthLimit;
-            }
-            set
-            {
-                FormOptions.MultipartHeadersLengthLimit = value;
-            }
+            get => FormOptions.MultipartHeadersLengthLimit;
+            set => FormOptions.MultipartHeadersLengthLimit = value;
         }
 
         /// <summary>
@@ -201,14 +139,8 @@ namespace Microsoft.AspNetCore.Mvc
         /// </summary>
         public long MultipartBodyLengthLimit
         {
-            get
-            {
-                return FormOptions.MultipartBodyLengthLimit;
-            }
-            set
-            {
-                FormOptions.MultipartBodyLengthLimit = value;
-            }
+            get => FormOptions.MultipartBodyLengthLimit;
+            set => FormOptions.MultipartBodyLengthLimit = value;
         }
 
         /// <inheritdoc />

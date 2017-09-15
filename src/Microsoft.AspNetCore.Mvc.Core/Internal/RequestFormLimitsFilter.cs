@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
@@ -12,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace Microsoft.AspNetCore.Mvc.Internal
 {
     /// <summary>
-    /// A filter that sets various limits to the <see cref="HttpRequest.Form"/>
+    /// A filter that configures <see cref="FormOptions"/> for the current request.
     /// </summary>
     public class RequestFormLimitsFilter : IAuthorizationFilter, IRequestFormLimitsPolicy
     {
@@ -55,8 +54,7 @@ namespace Microsoft.AspNetCore.Mvc.Internal
             // Determine if this instance is the 'effective' request form limits policy.
             for (var i = filters.Count - 1; i >= 0; i--)
             {
-                var filter = filters[i];
-                if (filter is IRequestFormLimitsPolicy)
+                if (filters[i] is IRequestFormLimitsPolicy filter)
                 {
                     return ReferenceEquals(this, filter);
                 }

@@ -74,7 +74,7 @@ namespace Microsoft.AspNetCore.Mvc.Internal
             var write = Assert.Single(sink.Writes);
             Assert.Equal(LogLevel.Warning, write.LogLevel);
             Assert.Equal(
-                "Could not apply limits to the request form as it might have been read already.",
+                "Unable to apply configured form options since the request form has already been read.",
                 write.State.ToString());
         }
 
@@ -99,7 +99,7 @@ namespace Microsoft.AspNetCore.Mvc.Internal
             var write = Assert.Single(sink.Writes);
             Assert.Equal(LogLevel.Debug, write.LogLevel);
             Assert.Equal(
-                "Applied limits to the request form.",
+                "Applied the configured form options on the current request.",
                 write.State.ToString());
         }
 
@@ -125,7 +125,7 @@ namespace Microsoft.AspNetCore.Mvc.Internal
             var write = Assert.Single(sink.Writes);
             Assert.Equal(LogLevel.Debug, write.LogLevel);
             Assert.Equal(
-                "Applied limits to the request form.",
+                "Applied the configured form options on the current request.",
                 write.State.ToString());
         }
 

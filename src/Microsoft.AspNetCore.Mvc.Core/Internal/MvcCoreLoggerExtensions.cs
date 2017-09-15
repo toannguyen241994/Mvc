@@ -276,12 +276,12 @@ namespace Microsoft.AspNetCore.Mvc.Internal
             _cannotApplyRequestFormLimits = LoggerMessage.Define(
                 LogLevel.Warning,
                 1,
-                "Could not apply limits to the request form as it might have been read already.");
+                "Unable to apply configured form options since the request form has already been read.");
 
             _appliedRequestFormLimits = LoggerMessage.Define(
                 LogLevel.Debug,
                 2,
-                "Applied limits to the request form.");
+                "Applied the configured form options on the current request.");
         }
 
         public static IDisposable ActionScope(this ILogger logger, ActionDescriptor action)
