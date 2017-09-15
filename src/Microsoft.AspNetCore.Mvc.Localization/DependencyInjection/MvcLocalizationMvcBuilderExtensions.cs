@@ -93,6 +93,11 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="builder">The <see cref="IMvcBuilder"/>.</param>
         /// <returns>The <see cref="IMvcBuilder"/>.</returns>
+        /// <remarks>
+        /// Adding localization also adds support for views via
+        /// <see cref="MvcViewFeaturesMvcCoreBuilderExtensions.AddViews(IMvcCoreBuilder)"/> and the Razor view engine
+        /// via <see cref="MvcRazorMvcCoreBuilderExtensions.AddRazorViewEngine(IMvcCoreBuilder)"/>.
+        /// </remarks>
         public static IMvcBuilder AddMvcLocalization(this IMvcBuilder builder)
         {
             if (builder == null)
@@ -113,6 +118,11 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="builder">The <see cref="IMvcBuilder"/>.</param>
         /// <param name="localizationOptionsSetupAction">An action to configure the <see cref="LocalizationOptions"/>.</param>
         /// <returns>The <see cref="IMvcBuilder"/>.</returns>
+        /// <remarks>
+        /// Adding localization also adds support for views via
+        /// <see cref="MvcViewFeaturesMvcCoreBuilderExtensions.AddViews(IMvcCoreBuilder)"/> and the Razor view engine
+        /// via <see cref="MvcRazorMvcCoreBuilderExtensions.AddRazorViewEngine(IMvcCoreBuilder)"/>.
+        /// </remarks>
         public static IMvcBuilder AddMvcLocalization(
             this IMvcBuilder builder,
             Action<LocalizationOptions> localizationOptionsSetupAction)
@@ -135,6 +145,11 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="builder">The <see cref="IMvcBuilder"/>.</param>
         /// <param name="format">The view format for localized views.</param>
         /// <returns>The <see cref="IMvcBuilder"/>.</returns>
+        /// <remarks>
+        /// Adding localization also adds support for views via
+        /// <see cref="MvcViewFeaturesMvcCoreBuilderExtensions.AddViews(IMvcCoreBuilder)"/> and the Razor view engine
+        /// via <see cref="MvcRazorMvcCoreBuilderExtensions.AddRazorViewEngine(IMvcCoreBuilder)"/>.
+        /// </remarks>
         public static IMvcBuilder AddMvcLocalization(
             this IMvcBuilder builder,
             LanguageViewLocationExpanderFormat format)
@@ -159,6 +174,11 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <see cref="LocalizationOptions"/>.</param>
         /// <param name="format">The view format for localized views.</param>
         /// <returns>The <see cref="IMvcBuilder"/>.</returns>
+        /// <remarks>
+        /// Adding localization also adds support for views via
+        /// <see cref="MvcViewFeaturesMvcCoreBuilderExtensions.AddViews(IMvcCoreBuilder)"/> and the Razor view engine
+        /// via <see cref="MvcRazorMvcCoreBuilderExtensions.AddRazorViewEngine(IMvcCoreBuilder)"/>.
+        /// </remarks>
         public static IMvcBuilder AddMvcLocalization(
             this IMvcBuilder builder,
             Action<LocalizationOptions> localizationOptionsSetupAction,
@@ -183,6 +203,11 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="dataAnnotationsLocalizationOptionsSetupAction">An action to configure the
         /// <see cref="MvcDataAnnotationsLocalizationOptions"/>.</param>
         /// <returns>The <see cref="IMvcBuilder"/>.</returns>
+        /// <remarks>
+        /// Adding localization also adds support for views via
+        /// <see cref="MvcViewFeaturesMvcCoreBuilderExtensions.AddViews(IMvcCoreBuilder)"/> and the Razor view engine
+        /// via <see cref="MvcRazorMvcCoreBuilderExtensions.AddRazorViewEngine(IMvcCoreBuilder)"/>.
+        /// </remarks>
         public static IMvcBuilder AddMvcLocalization(
             this IMvcBuilder builder,
             Action<MvcDataAnnotationsLocalizationOptions> dataAnnotationsLocalizationOptionsSetupAction)
@@ -208,6 +233,11 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="dataAnnotationsLocalizationOptionsSetupAction">An action to configure the
         /// <see cref="MvcDataAnnotationsLocalizationOptions"/>.</param>
         /// <returns>The <see cref="IMvcBuilder"/>.</returns>
+        /// <remarks>
+        /// Adding localization also adds support for views via
+        /// <see cref="MvcViewFeaturesMvcCoreBuilderExtensions.AddViews(IMvcCoreBuilder)"/> and the Razor view engine
+        /// via <see cref="MvcRazorMvcCoreBuilderExtensions.AddRazorViewEngine(IMvcCoreBuilder)"/>.
+        /// </remarks>
         public static IMvcBuilder AddMvcLocalization(
             this IMvcBuilder builder,
             Action<LocalizationOptions> localizationOptionsSetupAction,
@@ -233,6 +263,11 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="dataAnnotationsLocalizationOptionsSetupAction">An action to configure the
         /// <see cref="MvcDataAnnotationsLocalizationOptions"/>.</param>
         /// <returns>The <see cref="IMvcBuilder"/>.</returns>
+        /// <remarks>
+        /// Adding localization also adds support for views via
+        /// <see cref="MvcViewFeaturesMvcCoreBuilderExtensions.AddViews(IMvcCoreBuilder)"/> and the Razor view engine
+        /// via <see cref="MvcRazorMvcCoreBuilderExtensions.AddRazorViewEngine(IMvcCoreBuilder)"/>.
+        /// </remarks>
         public static IMvcBuilder AddMvcLocalization(
             this IMvcBuilder builder,
             LanguageViewLocationExpanderFormat format,
@@ -260,6 +295,11 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="dataAnnotationsLocalizationOptionsSetupAction">An action to configure 
         /// the <see cref="MvcDataAnnotationsLocalizationOptions"/>. Can be <c>null</c>.</param>
         /// <returns>The <see cref="IMvcBuilder"/>.</returns>
+        /// <remarks>
+        /// Adding localization also adds support for views via
+        /// <see cref="MvcViewFeaturesMvcCoreBuilderExtensions.AddViews(IMvcCoreBuilder)"/> and the Razor view engine
+        /// via <see cref="MvcRazorMvcCoreBuilderExtensions.AddRazorViewEngine(IMvcCoreBuilder)"/>.
+        /// </remarks>
         public static IMvcBuilder AddMvcLocalization(
             this IMvcBuilder builder,
             Action<LocalizationOptions> localizationOptionsSetupAction,
